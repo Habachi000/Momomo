@@ -1,6 +1,5 @@
 import requests
-import uvicorn
-import os  # ضروري باش نقراو المنفذ والساروت
+import os
 from fastapi import FastAPI
 from pydantic import BaseModel
 
@@ -9,31 +8,38 @@ app = FastAPI()
 class UserPayload(BaseModel):
     text: str
 
-# جلب المعلومات من إعدادات الاستضافة (Env Vars) أو استعمال القيم الافتراضية
-# في الاستضافة، حط هاد المعلومات في خانة الـ Environment Variables
-FIREBASE_URL = os.getenv("FIREBASE_URL", "https://follower-hb-default-rtdb.firebaseio.com/.json")
-MY_SECRET = os.getenv("FIREBASE_SECRET", "Vem8760WElX5wFkflX9D0DsT9cznsPbGhrLseQtf")
+# معلومات Firebase (يفضل وضعها في Env Vars في Vercel)
+FIREBASE_URL = "https://follower-hb-default-rtdb.firebaseio.com/users.json"
+MY_SECRET = "Vem8760WElX5wFkflX9D0DsT9cznsPbGhrLseQtf"
+
+@app.get("/")
+async def root():
+    return {"status": "Follower-HB Server is Running"}
 
 @app.post("/update-user")
 async def update_firebase_user(data: UserPayload):
-    print(f"--- [Request Received] Text: {data.text} ---")
     try:
-        # بناء الرابط
+        # إضافة الساروت للرابط
         final_url = f"{FIREBASE_URL}?auth={MY_SECRET}"
-        payload = {"user": data.text}
         
-        # إرسال لـ Firebase (PUT يمسح القديم ويحط الجديد)
-        response = requests.put(final_url, json=payload, timeout=15)
+        # البيانات التي سيتم تخزينها داخل الـ ID التلقائي
+        payload = {
+            "user_content": data.text,
+            "timestamp": "2026-03-25" # يمكنك استخدام مكتبة datetime لجعل الوقت حقيقياً
+        }
+        
+        # استعمال POST لإنشاء ID تلقائي (Push ID) من طرف Firebase
+        response = requests.post(final_url, json=payload, timeout=10)
+        
+        # إرجاع الـ ID الجديد الذي أنشأه Firebase للتطبيق
+        generated_id = response.json().get("name")
         
         return {
             "status": "success", 
-            "firebase_code": response.status_code
+            "firebase_id": generated_id
         }
     except Exception as e:
         return {"status": "error", "message": str(e)}
-
-if __name__ == "__main__":
-    # الاستضافة كتعطينا المنفذ في متغير سميتو PORT
     port = int(os.getenv("PORT", 8000))
     # كنخدمو بـ 0.0.0.0 باش السيرفر يقبل اتصالات من "برا"
     uvicorn.run(app, host="0.0.0.0", port=port)
