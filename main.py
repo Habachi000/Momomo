@@ -2,38 +2,35 @@ import requests
 import os
 from fastapi import FastAPI
 from pydantic import BaseModel
-
+import  token_hb
 app = FastAPI()
 
 class UserPayload(BaseModel):
     text: str
-
-# معلومات Firebase (يفضل وضعها في Env Vars في Vercel)
-FIREBASE_URL = "https://follower-hb-default-rtdb.firebaseio.com/amin.json"
-MY_SECRET = "Vem8760WElX5wFkflX9D0DsT9cznsPbGhrLseQtf"
-
+    
 @app.get("/")
-async def root():
-    return {"status": "ســـــرفر يعمـــل  "}
+async def Test_GET():
+    return token_hb.root()
 
 @app.post("/update-user")
 async def update_firebase_user(data: UserPayload):
     try:
-        # إضافة الساروت للرابط
-        final_url = f"{FIREBASE_URL}?auth={MY_SECRET}"
+        final_url = f"{token_hb.FIREBASE_URL}?auth={token_hb.MY_SECRET}"
         
-        # البيانات التي سيتم تخزينها داخل الـ ID التلقائي
         payload = {
             "user_content": data.text,
-            "timestamp": "2026-03-25" # يمكنك استخدام مكتبة datetime لجعل الوقت حقيقياً
+            "timestamp": "2026-03-25" 
         }
         
-        # استعمال POST لإنشاء ID تلقائي (Push ID) من طرف Firebase
         response = requests.post(final_url, json=payload, timeout=10)
-        
-        # إرجاع الـ ID الجديد الذي أنشأه Firebase للتطبيق
         generated_id = response.json().get("name")
         
+        return {
+            "status": "success", 
+            "firebase_id": generated_id
+        }
+    except Exception as e:
+        return {"status": "error", "message": str(e)}
         return {
             "status": "success", 
             "firebase_id": generated_id
