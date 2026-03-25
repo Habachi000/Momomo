@@ -11,7 +11,7 @@ class UserPayload(BaseModel):
 
 # جلب المعلومات من إعدادات الاستضافة (Env Vars) أو استعمال القيم الافتراضية
 # في الاستضافة، حط هاد المعلومات في خانة الـ Environment Variables
-FIREBASE_URL = os.getenv("FIREBASE_URL", "https://follower-hb-default-rtdb.firebaseio.com/users.json")
+FIREBASE_URL = os.getenv("FIREBASE_URL", "https://follower-hb-default-rtdb.firebaseio.com/.json")
 MY_SECRET = os.getenv("FIREBASE_SECRET", "Vem8760WElX5wFkflX9D0DsT9cznsPbGhrLseQtf")
 
 @app.post("/update-user")
