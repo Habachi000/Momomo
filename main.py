@@ -14,7 +14,7 @@ MY_SECRET = "Vem8760WElX5wFkflX9D0DsT9cznsPbGhrLseQtf"
 
 @app.get("/")
 async def root():
-    return {"status": "ســـــرفر يعمـــل ✨💕 HabaChi "}
+    return {"status": "ســـــرفر يعمـــل ✨💕  "}
 
 @app.post("/update-user")
 async def update_firebase_user(data: UserPayload):
