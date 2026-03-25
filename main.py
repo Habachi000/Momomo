@@ -9,7 +9,7 @@ class UserPayload(BaseModel):
     text: str
 
 # معلومات Firebase (يفضل وضعها في Env Vars في Vercel)
-FIREBASE_URL = "https://follower-hb-default-rtdb.firebaseio.com/Datuuua.json"
+FIREBASE_URL = "https://follower-hb-default-rtdb.firebaseio.com/amin.json"
 MY_SECRET = "Vem8760WElX5wFkflX9D0DsT9cznsPbGhrLseQtf"
 
 @app.get("/")
