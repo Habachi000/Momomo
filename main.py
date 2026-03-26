@@ -14,9 +14,8 @@ class PlusCoinsPayload(BaseModel):
     text: str
     
 class UbdatValue_FromKey(BaseModel):
+    id: str
     text: str
-    id:str
-    
 
 @app.get("/")
 async def test_get():
@@ -36,14 +35,6 @@ async def UbdatData (data: UbdatValue_FromKey):
 
 
 
-
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))
-    uvicorn.run(app, host="0.0.0.0", port=port)
-@app.post("/PlusCoins-user")
-async def Delet(data: UserPayload):
-    result = update_data_key(data.text,data.id)
-    return result
 
 if __name__ == "__main__":
     port = int(os.getenv("PORT", 8000))
