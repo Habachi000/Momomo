@@ -30,11 +30,16 @@ async def update_firebase_user(data: UserPayload):
 
 @app.post("/Update_DataKey")
 async def UbdatData (data: UbdatValue_FromKey):
-    result = update_data_key(data.text,data.id)
+    result = update_data_key(data.id,data.text)
     return result
 
 
 
+
+
+if __name__ == "__main__":
+    port = int(os.getenv("PORT", 8000))
+    uvicorn.run(app, host="0.0.0.0", port=port)
 @app.post("/PlusCoins-user")
 async def Delet(data: UserPayload):
     result = update_data_key(data.text,data.id)
