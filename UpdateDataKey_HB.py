@@ -4,7 +4,7 @@ import json
 
 def update_data_key(record_id: str, new_content: str):
     try:
-        final_url = f"{token_hb.FIREBASE_URL}/{record_id}.json?auth={token_hb.MY_SECRET}"
+        final_url = f"{token_hb.FIREBASE_URL}/{record_id}.json"
         
         data = {"text": new_content}
         response = requests.patch(final_url, data=json.dumps(data), timeout=10)
